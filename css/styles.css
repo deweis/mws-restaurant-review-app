@@ -330,6 +330,12 @@ nav h1 a {
 	#restaurant-cuisine {
 		margin: 0;
 	}
+	#restaurant-address {
+		text-align: center;
+	}
+	#restaurant-hours {
+		margin: 0 auto;
+	}
 }
 
 @media screen and (min-width: 1024px) {
