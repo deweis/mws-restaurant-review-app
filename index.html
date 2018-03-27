@@ -11,6 +11,8 @@
 
 <body>
   <header>
+    <!-- Skip link to skip map tabbing -->
+    <a class="skip-link" href="#neighborhoods-select">Skip to main content</a>
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
@@ -18,7 +20,7 @@
 
   <main id="maincontent">
     <section id="map-container">
-      <div id="map"></div>
+      <div id="map" role="application" aria-roledescription="Restaurants Google Map"></div>
     </section>
     <section>
       <div class="filter-options">

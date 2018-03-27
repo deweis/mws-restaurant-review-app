@@ -14,6 +14,8 @@
 <body class="inside">
   <!-- Beginning header -->
   <header>
+    <!-- Skip link to skip map tabbing-->
+    <a class="skip-link" href="#restaurant-container">Skip to main content</a>
     <!-- Beginning nav -->
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
@@ -23,6 +25,7 @@
       <li><a href="/">Home</a></li>
     </ul>
     <!-- End breadcrumb -->
+
     <!-- End nav -->
   </header>
   <!-- End header -->
@@ -31,7 +34,7 @@
   <main id="maincontent">
     <!-- Beginning map -->
     <section id="map-container">
-      <div id="map"></div>
+      <div id="map" role="application" aria-roledescription="Restaurants Google Map"></div>
     </section>
     <!-- End map -->
     <!-- Beginning restaurant -->
