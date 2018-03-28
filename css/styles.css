@@ -142,6 +142,9 @@ nav h1 a {
   padding: 0 10px;
   width: 200px;
 }
+.filter-options select:focus {
+  outline: 3px solid orange;
+}
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
@@ -195,7 +198,9 @@ nav h1 a {
   text-decoration: none;
   text-transform: uppercase;
 }
-
+#restaurants-list li a:focus {
+  outline: 3px solid #3397DB;
+}
 
 
 /* ====================== Restaurant Details ====================== */
