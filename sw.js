@@ -1,3 +1,5 @@
+const cacheName = 'restaurant-static';
+
 self.addEventListener('install', function(event) {
   const urlsToCache = [
     "/",
@@ -12,14 +14,26 @@ self.addEventListener('install', function(event) {
   ];
 
   event.waitUntil(
-    caches.open('restaurant-static').then(function(cache) {
+    caches.open(cacheName).then(function(cache) {
       return cache.addAll(urlsToCache);
     })
   );
 });
 
 self.addEventListener('fetch', event => {
+  var url = new URL(event.request.url);
+
+  if (url.origin != location.origin) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+    caches.open(cacheName).then(cache => {
+      return cache.match(event.request)
+            .then(response => response || fetch(event.request).then(resp => {
+                cache.put(event.request, resp.clone())
+                return resp;
+            }))
+    })
   );
 });

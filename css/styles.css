@@ -232,7 +232,8 @@ nav h1 a {
 	display: flex;
 	flex-wrap: wrap;
 }
-#restaurant-name {
+#restaurant-name,
+#reviews-container h3 {
   color: #f18200;
   font-family: Arial,sans-serif;
   font-size: 20pt;
