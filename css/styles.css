@@ -176,7 +176,6 @@ nav h1 a {
   font-weight: 200;
   letter-spacing: 0;
   line-height: 1.3;
-  margin: 20px 0 10px;
   text-transform: uppercase;
 	padding: 0 10px;
 }
@@ -199,8 +198,6 @@ nav h1 a {
 #restaurants-list li a:focus {
   outline: 3px solid #3397DB;
 }
-
-
 /* ====================== Restaurant Details ====================== */
 
 /*.inside header {
@@ -227,7 +224,6 @@ nav h1 a {
   position: absolute;
   width: 50%;
 }*/
-
 #restaurant-container {
 	display: flex;
 	flex-wrap: wrap;
@@ -239,9 +235,12 @@ nav h1 a {
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
-  margin: 30px 10px;
+	padding: 30px 10px;
+	margin: 0;
   text-transform: uppercase;
   line-height: 1.1;
+}
+#restaurant-name {
 	width: 100%;
 }
 #restaurant-img {
@@ -253,8 +252,7 @@ nav h1 a {
 }
 #restaurant-address {
   font-size: 12pt;
-  margin: 10px;
-	width: 100%;
+	padding: 10px;
 }
 #restaurant-cuisine {
   background-color: #333;
@@ -272,19 +270,14 @@ nav h1 a {
   border-top: 1px solid #fff;
   width: 100%;
 }
+#reviews-list {
+	border-top: 1px solid #d9d9d9;
+}
 #restaurant-hours {
 	margin: 10px;
 }
 #restaurant-hours td {
   color: #666;
-}
-#reviews-container h2 {
-  color: #f58500;
-  font-size: 24pt;
-  font-weight: 300;
-  letter-spacing: -1px;
-  padding-bottom: 1pt;
-	margin: 30px 10px 15px 10px;
 }
 #reviews-list {
 	display: flex;
@@ -338,7 +331,7 @@ nav h1 a {
 
 /* ====================== Media Queries ====================== */
 
-@media screen and (min-width: 650px) {
+@media screen and (min-width: 690px) {
 	#restaurants-list li, #reviews-list li {
 		width: 43%;
 	}
@@ -353,6 +346,7 @@ nav h1 a {
 	}
 	#restaurant-hours {
 		margin: 0 auto;
+		padding: 10px;
 	}
 }
 
