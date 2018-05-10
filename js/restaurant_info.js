@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 let restaurant;
 var map;
 
@@ -12,25 +13,26 @@ window.initMap = () => {
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: restaurant.latlng,
-        scrollwheel: false
+        scrollwheel: false,
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
-}
+};
 
 /**
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    callback(null, self.restaurant);
     return;
   }
+
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    error = 'No restaurant id in URL';
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -39,11 +41,12 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
+
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
-}
+};
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -56,7 +59,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
+  image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = restaurant.image_alt;
 
@@ -67,9 +70,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
   // fill reviews
   fillReviewsHTML();
-}
+};
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -89,7 +93,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
     hours.appendChild(row);
   }
-}
+};
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -106,44 +110,46 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
+
   const ul = document.getElementById('reviews-list');
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-}
+};
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
-  const div = document.createElement('div')
+  const div = document.createElement('div');
   li.appendChild(div);
 
   const name = document.createElement('p');
-  name.setAttribute("class", "reviewName");
+  name.setAttribute('class', 'reviewName');
   name.innerHTML = review.name;
   div.appendChild(name);
 
   const date = document.createElement('p');
-  date.setAttribute("class", "reviewDate");
+  date.setAttribute('class', 'reviewDate');
   date.innerHTML = review.date;
   div.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  rating.setAttribute("class", "reviewRating");
-  review.rating === 5 ? rating.style.backgroundColor = "green" : review.rating > 2 ? rating.style.backgroundColor = "orange" : rating.style.backgroundColor = "red";
+  rating.setAttribute('class', 'reviewRating');
+  rating.style.backgroundColor = review.rating === 5 ? 'green' :
+                                 review.rating > 2 ? 'orange' : 'red';
   li.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
-  comments.setAttribute("class", "reviewComment");
+  comments.setAttribute('class', 'reviewComment');
   li.appendChild(comments);
 
   return li;
-}
+};
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
@@ -153,7 +159,7 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
-}
+};
 
 /**
  * Get a parameter by name from page URL.
@@ -169,4 +175,4 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+};
