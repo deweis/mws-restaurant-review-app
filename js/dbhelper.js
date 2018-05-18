@@ -15,6 +15,27 @@ class DBHelper {
   }
 
   /**
+   * IDB creation
+   *
+   */
+  static openDatabase () {
+    console.log('open Database');
+
+    // If the browser doesn't support service worker,
+    // we don't care about having a database
+    if (!navigator.serviceWorker) {
+      console.log(`Browser doesn't support Service Workers`);
+      return Promise.resolve();
+    }
+
+    return idb.open('restaurant-db', 1, function (upgradeDb) {
+      var store = upgradeDb.createObjectStore('restaurants', {
+        keyPath: 'id',
+      });
+    });
+  }
+
+  /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
@@ -27,12 +48,28 @@ class DBHelper {
         }
 
         response.json().then(function (restaurants) {
+
+          /* Add the restaurants to the indexedDB */
+          DBHelper.openDatabase().then(function (db) {
+            if (!db) {
+              return;
+            } else {
+              const tx = db.transaction('restaurants', 'readwrite');
+              let store = tx.objectStore('restaurants');
+              restaurants.forEach(function (restaurant) {
+                store.put(restaurant);
+              });
+            }
+          });
+
           callback(null, restaurants);
         });
       }
     )
     .catch(function (err) {
       console.log('Fetch Error: ', err);
+      console.log('will try idb..');
+      DBHelper.openDatabase();
     });
   }
 
