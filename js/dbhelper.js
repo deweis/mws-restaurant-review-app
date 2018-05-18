@@ -19,7 +19,6 @@ class DBHelper {
    *
    */
   static openDatabase () {
-    console.log('open Database');
 
     // If the browser doesn't support service worker,
     // we don't care about having a database
@@ -39,6 +38,21 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+
+    // get restaurants from indexedDB
+    DBHelper.openDatabase().then(function (db) {
+      if (!db) {
+        return;
+      }  else {
+        return db.transaction('restaurants', 'readwrite')
+                 .objectStore('restaurants')
+                 .getAll();
+      }
+    }).then(function (restaurants) {
+      if (restaurants.length === 0) return;
+      callback(null, restaurants);
+    });
+
     fetch(DBHelper.DATABASE_URL)
     .then(
       function (response) {
@@ -49,13 +63,13 @@ class DBHelper {
 
         response.json().then(function (restaurants) {
 
-          /* Add the restaurants to the indexedDB */
+          /* Add restaurants to indexedDB */
           DBHelper.openDatabase().then(function (db) {
             if (!db) {
               return;
             } else {
-              const tx = db.transaction('restaurants', 'readwrite');
-              let store = tx.objectStore('restaurants');
+              let store = db.transaction('restaurants', 'readwrite')
+                            .objectStore('restaurants');
               restaurants.forEach(function (restaurant) {
                 store.put(restaurant);
               });
@@ -68,8 +82,6 @@ class DBHelper {
     )
     .catch(function (err) {
       console.log('Fetch Error: ', err);
-      console.log('will try idb..');
-      DBHelper.openDatabase();
     });
   }
 
