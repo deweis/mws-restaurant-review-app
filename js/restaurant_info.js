@@ -80,6 +80,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
+  hours.innerHTML = ''; // mitigate double appending
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
@@ -100,6 +101,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
+  container.innerHTML = '<ul id="reviews-list"></ul>'; // mitigate double appending
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
@@ -156,6 +158,7 @@ createReviewHTML = (review) => {
  */
 fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
+  if (breadcrumb.childElementCount === 2) return; // mitigate double appending
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
