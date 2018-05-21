@@ -152,6 +152,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
+  var myLazyLoad = new LazyLoad();
+
   const li = document.createElement('li');
 
   const image = document.createElement('img');
@@ -159,6 +161,13 @@ createRestaurantHTML = (restaurant) => {
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = `Picture related to the ${restaurant.name} restaurant`;
   li.append(image);
+
+  /* change src to data-src for lazyload of images */
+  let src = image.getAttribute('src');
+  if (src != '/img/undefined.jpg') {      // lazyload not loading the placeholder
+    image.removeAttribute('src');
+    image.setAttribute('data-src', src);
+  }
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
