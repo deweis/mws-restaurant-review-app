@@ -112,7 +112,8 @@ nav h1 a {
 }
 /* ====================== Map ====================== */
 #map {
-  background-color: #ccc;
+  /* background-color: #ccc; */
+	background: transparent url(../img/loading.gif) no-repeat center center;
   height: 400px;
   width: 100%;
 }
