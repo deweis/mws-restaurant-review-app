@@ -113,7 +113,8 @@ nav h1 a {
 /* ====================== Map ====================== */
 #map {
   /* background-color: #ccc; */
-	background: transparent url(../img/loading.gif) no-repeat center center;
+	/* background: transparent url(../img/loading.gif) no-repeat center center; */
+	background: url('https://maps.googleapis.com/maps/api/staticmap?center=40.722216,-73.987501&zoom=12&size=1920x400&key=AIzaSyDG6Yvq4KD5IxSyIOIC0RFtsrQSPsM7vyk') no-repeat center center;
   height: 400px;
   width: 100%;
 }
