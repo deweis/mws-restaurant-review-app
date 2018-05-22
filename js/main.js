@@ -170,7 +170,7 @@ createRestaurantHTML = (restaurant) => {
 
   /* change src to data-src for lazyload of images */
   let src = image.getAttribute('src');
-  if (src != '/img/undefined.jpg') {      // lazyload not loading the placeholder
+  if (src != '/img/undefined.webp') {      // lazyload not loading the placeholder
     image.removeAttribute('src');
     image.setAttribute('data-src', src);
   }
