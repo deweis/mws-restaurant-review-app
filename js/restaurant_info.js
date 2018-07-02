@@ -99,25 +99,32 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
-  container.innerHTML = '<ul id="reviews-list"></ul>'; // mitigate double appending
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+fillReviewsHTML = (restaurantId = self.restaurant.id) => {
+  DBHelper.fetchReviews(restaurantId, (error, reviews) => {
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
+    if (error) {
+      console.log(error);
+    } else {
+      const container = document.getElementById('reviews-container');
+      container.innerHTML = '<ul id="reviews-list"></ul>'; // mitigate double appending
+      const title = document.createElement('h3');
+      title.innerHTML = 'Reviews';
+      container.appendChild(title);
 
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+      if (!reviews) {
+        const noReviews = document.createElement('p');
+        noReviews.innerHTML = 'No reviews yet!';
+        container.appendChild(noReviews);
+        return;
+      } else {
+        const ul = document.getElementById('reviews-list');
+        reviews.forEach(review => {
+          ul.appendChild(createReviewHTML(review));
+        });
+        container.appendChild(ul);
+      }
+    }
   });
-  container.appendChild(ul);
 };
 
 /**
@@ -135,7 +142,8 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   date.setAttribute('class', 'reviewDate');
-  date.innerHTML = review.date;
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  date.innerHTML = (new Date(review.createdAt)).toLocaleDateString('en-US', dateOptions);
   div.appendChild(date);
 
   const rating = document.createElement('p');

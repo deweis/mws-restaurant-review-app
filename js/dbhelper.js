@@ -9,9 +9,14 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
+  static get RESTAURANT_URL() {
     const port = 1337;
     return `http://localhost:${port}/restaurants`;
+  }
+
+  static get REVIEWS_URL() {
+    const port = 1337;
+    return `http://localhost:${port}/reviews/?restaurant_id=`;
   }
 
   /**
@@ -53,7 +58,7 @@ class DBHelper {
       callback(null, restaurants);
     });
 
-    fetch(DBHelper.DATABASE_URL)
+    fetch(DBHelper.RESTAURANT_URL)
     .then(
       function (response) {
         if (response.status !== 200) {
@@ -195,6 +200,16 @@ class DBHelper {
         callback(null, uniqueCuisines);
       }
     });
+  }
+
+  /**
+   * Fetch all reviews.
+   */
+  static fetchReviews(id, callback) {
+    return fetch(`${DBHelper.REVIEWS_URL}${id}`)
+           .then(response => response.json())
+           .then(reviews => callback(null, reviews))
+           .catch(error => callback(`Request failed. Returned ${error}`, null));
   }
 
   /**
