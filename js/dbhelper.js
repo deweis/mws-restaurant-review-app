@@ -33,7 +33,10 @@ class DBHelper {
     }
 
     return idb.open('restaurant-db', 1, function (upgradeDb) {
-      var store = upgradeDb.createObjectStore('restaurants', {
+      var storeRestaurants = upgradeDb.createObjectStore('restaurants', {
+        keyPath: 'id',
+      });
+      var storeReviews = upgradeDb.createObjectStore('reviews', {
         keyPath: 'id',
       });
     });
@@ -73,10 +76,10 @@ class DBHelper {
             if (!db) {
               return;
             } else {
-              let store = db.transaction('restaurants', 'readwrite')
+              let storeRestaurants = db.transaction('restaurants', 'readwrite')
                             .objectStore('restaurants');
               restaurants.forEach(function (restaurant) {
-                store.put(restaurant);
+                storeRestaurants.put(restaurant);
               });
             }
           });
@@ -208,7 +211,25 @@ class DBHelper {
   static fetchReviews(id, callback) {
     return fetch(`${DBHelper.REVIEWS_URL}${id}`)
            .then(response => response.json())
-           .then(reviews => callback(null, reviews))
+           .then(reviews => {
+
+              /* Add reviews to indexedDB */
+              DBHelper.openDatabase().then(function (db) {
+                if (!db) {
+                  console.log('db not opened');
+                  return;
+                } else {
+                  console.log('db opened');
+                  let storeReviews = db.transaction('reviews', 'readwrite')
+                                .objectStore('reviews');
+                  reviews.forEach(function (review) {
+                    storeReviews.put(review);
+                  });
+                }
+              });
+
+              callback(null, reviews);
+            })
            .catch(error => callback(`Request failed. Returned ${error}`, null));
   }
 
