@@ -38,7 +38,11 @@ class DBHelper {
       });
       var storeReviews = upgradeDb.createObjectStore('reviews', {
         keyPath: 'id',
+        autoIncrement: true,
       });
+      storeReviews.createIndex('restaurant_id',
+                               'restaurant_id',
+                               { unique: false });
     });
   }
 
@@ -209,19 +213,34 @@ class DBHelper {
    * Fetch all reviews.
    */
   static fetchReviews(id, callback) {
-    return fetch(`${DBHelper.REVIEWS_URL}${id}`)
+
+    // get reviews from indexedDB
+    DBHelper.openDatabase().then(function (db) {
+      if (!db) {
+        return;
+      }  else {
+        let storeReviews = db.transaction('reviews', 'readwrite')
+                             .objectStore('reviews');
+        let restIndex = storeReviews.index('restaurant_id');
+        return restIndex.getAll(parseInt(id));
+      }
+    }).then(function (reviews) {
+      if (reviews.length === 0) return;
+      callback(null, reviews);
+    });
+
+    /* Fetch reviews from network */
+    fetch(`${DBHelper.REVIEWS_URL}${id}`)
            .then(response => response.json())
            .then(reviews => {
 
               /* Add reviews to indexedDB */
               DBHelper.openDatabase().then(function (db) {
                 if (!db) {
-                  console.log('db not opened');
                   return;
                 } else {
-                  console.log('db opened');
                   let storeReviews = db.transaction('reviews', 'readwrite')
-                                .objectStore('reviews');
+                                       .objectStore('reviews');
                   reviews.forEach(function (review) {
                     storeReviews.put(review);
                   });
