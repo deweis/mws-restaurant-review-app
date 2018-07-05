@@ -186,7 +186,8 @@ nav h1 a {
   margin-bottom: 0;
 	padding: 0 10px;
 }
-#restaurants-list li a {
+#restaurants-list li a,
+.btn-add-review {
   background-color: orange;
 	color: #fff;
   display: inline-block;
@@ -196,9 +197,13 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-}
-#restaurants-list li a:focus {
+}#restaurants-list li a:focus,
+.btn-add-review:focus {
   outline: 3px solid #3397DB;
+}
+#restaurants-list li a:hover,
+.btn-add-review:hover {
+	filter: brightness(90%);
 }
 /* ====================== Restaurant Details ====================== */
 
@@ -280,6 +285,22 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+.reviews-title-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.reviews-title {
+	width: 45%;
+}
+.btn-add-review {
+	border: none;
+	margin: 25px 10px;
+  padding: 10px 25px;
+}
+.btn-add-review:hover {
+	cursor: pointer;
 }
 #reviews-list {
 	display: flex;

@@ -107,9 +107,14 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
     } else {
       const container = document.getElementById('reviews-container');
       container.innerHTML = '<ul id="reviews-list"></ul>'; // mitigate double appending
-      const title = document.createElement('h3');
-      title.innerHTML = 'Reviews';
-      container.appendChild(title);
+
+      const reviewsTitleBar = document.createElement('div');
+      reviewsTitleBar.setAttribute('class', 'reviews-title-container');
+      reviewsTitleBar.innerHTML = `
+        <h3 class="reviews-title">Reviews</h3>
+        <button class="btn-add-review" type="button">Add Review</button>
+      `;
+      container.appendChild(reviewsTitleBar);
 
       if (!reviews) {
         const noReviews = document.createElement('p');
