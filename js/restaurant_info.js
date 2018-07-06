@@ -112,9 +112,13 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
       reviewsTitleBar.setAttribute('class', 'reviews-title-container');
       reviewsTitleBar.innerHTML = `
         <h3 class="reviews-title">Reviews</h3>
-        <button class="btn-add-review" type="button">Add Review</button>
+        <button id="btn-add-review" class="btn-add-review" type="button">Add Review</button>
       `;
       container.appendChild(reviewsTitleBar);
+
+      document.getElementById('btn-add-review').addEventListener('click', function () {
+        document.getElementById('reviewForm').style.display = 'list-item';
+      });
 
       if (!reviews) {
         const noReviews = document.createElement('p');
@@ -123,13 +127,107 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
         return;
       } else {
         const ul = document.getElementById('reviews-list');
+        ul.appendChild(createReviewForm());
+        document.getElementById('nameInput').required = true;
+        document.getElementById('nameInput').autofocus = true;
+        document.getElementById('commentInput').required = true;
         reviews.forEach(review => {
           ul.appendChild(createReviewHTML(review));
         });
         container.appendChild(ul);
+
+        document.getElementById('reviewForm').addEventListener('submit', function (event) {
+          event.preventDefault();   // Thank you https://stackoverflow.com/questions/21338476/addeventlistener-on-form-submit
+          addReview();
+        });
       }
     }
   });
+};
+
+addReview = () => {
+  console.log('review added');
+};
+
+/**
+ * Create review form and add it (hidden by default)
+ */
+createReviewForm = () => {
+  const li = document.createElement('li');
+  li.setAttribute('class', 'reviewForm');
+  li.setAttribute('id', 'reviewForm');
+  const form = document.createElement('form');
+  form.setAttribute = ('id', 'reviewForm');
+  li.appendChild(form);
+  const div = document.createElement('div');
+  div.setAttribute('class', 'review-header reviewHeaderInput');
+  form.appendChild(div);
+
+  // const name = document.createElement('p');
+  // name.setAttribute('class', 'reviewName');
+  // name.innerHTML = 'Your Name';
+  // div.appendChild(name);
+
+  const nameInput = document.createElement('input');
+  nameInput.setAttribute('type', 'text');
+  nameInput.setAttribute('placeholder', 'Your name');
+  nameInput.setAttribute('id', 'nameInput');
+  nameInput.setAttribute('class', 'nameInput');
+  div.appendChild(nameInput);
+
+  const date = document.createElement('p');
+  date.setAttribute('class', 'reviewDate dateInput');
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  date.innerHTML = (new Date()).toLocaleDateString('en-US', dateOptions);
+  div.appendChild(date);
+
+  // const rating = document.createElement('p');
+  // rating.innerHTML = 5;
+  // rating.setAttribute('class', 'reviewRating');
+  // rating.style.backgroundColor = rating === 5 ? 'green' :
+  //                                rating > 2 ? 'orange' : 'red';
+  // form.appendChild(rating);
+
+  const ratingInput = document.createElement('div');
+  ratingInput.setAttribute('class', 'ratingInput');
+  form.appendChild(ratingInput);
+
+  const ratingLabel = document.createElement('label');
+  ratingLabel.innerHTML = 'Your rating:';
+  ratingLabel.setAttribute('for', 'ratingInput');
+  ratingInput.appendChild(ratingLabel);
+
+  const ratingSelect = document.createElement('select');
+  ratingSelect.innerHTML = `
+    <option>5</option>
+    <option>4</option>
+    <option>3</option>
+    <option>2</option>
+    <option>1</option>
+  `;
+  ratingSelect.setAttribute('class', 'ratingSelect');
+  ratingSelect.setAttribute('id', 'ratingSelect');
+  ratingInput.appendChild(ratingSelect);
+
+  // const comments = document.createElement('p');
+  // comments.innerHTML = 'Your comment...';
+  // comments.setAttribute('class', 'reviewComment');
+  // form.appendChild(comments);
+
+  const commentInput = document.createElement('textarea');
+  commentInput.setAttribute('placeholder', 'Comment your rating..');
+  commentInput.setAttribute('class', 'commentInput');
+  commentInput.setAttribute('id', 'commentInput');
+  commentInput.setAttribute('rows', '5');
+  form.appendChild(commentInput);
+
+  const submitBtn = document.createElement('button');
+  submitBtn.setAttribute('type', 'submit');
+  submitBtn.innerHTML = 'Submit';
+  submitBtn.setAttribute('class', 'btn-submit-review');
+  form.appendChild(submitBtn);
+
+  return li;
 };
 
 /**
@@ -138,6 +236,7 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
 createReviewHTML = (review) => {
   const li = document.createElement('li');
   const div = document.createElement('div');
+  div.setAttribute('class', 'review-header');
   li.appendChild(div);
 
   const name = document.createElement('p');

@@ -187,7 +187,8 @@ nav h1 a {
 	padding: 0 10px;
 }
 #restaurants-list li a,
-.btn-add-review {
+.btn-add-review,
+.btn-submit-review {
   background-color: orange;
 	color: #fff;
   display: inline-block;
@@ -198,11 +199,13 @@ nav h1 a {
   text-decoration: none;
   text-transform: uppercase;
 }#restaurants-list li a:focus,
-.btn-add-review:focus {
+.btn-add-review:focus,
+.btn-submit-review:focus {
   outline: 3px solid #3397DB;
 }
 #restaurants-list li a:hover,
-.btn-add-review:hover {
+.btn-add-review:hover,
+.btn-submit-review:hover {
 	filter: brightness(90%);
 }
 /* ====================== Restaurant Details ====================== */
@@ -317,11 +320,13 @@ nav h1 a {
   margin: 10px;
   width: 100%;
 }
-#reviews-list li div {
+/* #reviews-list li div { */
+.review-header {
 	background-color: #000;
 	border-radius: 20px 0 0 0;
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-between;
 	padding: 10px 15px;
 }
 .reviewName {
@@ -350,10 +355,49 @@ nav h1 a {
 	margin: 0;
 	padding: 15px 15px 25px 15px;
 }
-
+.reviewForm {
+	display: none;
+}
+.reviewHeaderInput {
+	padding: 22px 15px;
+}
+.dateInput {
+	margin: 5px; auto;
+	text-align: right;
+	width: 50%;
+}
+.nameInput {
+	border: none;
+	border-radius: 4px;
+	padding: 5px;
+	max-width: 40%;
+}
+.ratingInput {
+	margin: 10px 15px 0 15px;
+}
+.ratingSelect {
+	border: 1px solid #ccc;
+  border-radius: 4px;
+	margin: 5px;
+	padding: 5px;
+	width: 20%;
+	min-width: 75px;
+}
+.commentInput {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin: 10px 15px 0 15px;
+	padding: 10px;
+	width: 80%;
+	resize: none;
+}
+.btn-submit-review {
+	border: none;
+	margin: 10px 15px 20px 15px;
+  padding: 10px 25px;
+}
 
 /* ====================== Media Queries ====================== */
-
 @media screen and (min-width: 690px) {
 	#restaurants-list li, #reviews-list li {
 		width: 43%;
@@ -390,5 +434,8 @@ nav h1 a {
 		margin-left: auto;
 		margin-right: auto;
 		width: 1024px;
+	}
+	.commentInput {
+		width: 88%;
 	}
 }
