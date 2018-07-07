@@ -127,7 +127,9 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
         return;
       } else {
         const ul = document.getElementById('reviews-list');
-        ul.appendChild(createReviewForm());
+
+        //ul.appendChild();
+        ul.insertBefore(createReviewForm(), ul.childNodes[0]);
         document.getElementById('nameInput').required = true;
         document.getElementById('nameInput').autofocus = true;
         document.getElementById('commentInput').required = true;
@@ -146,7 +148,21 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
 };
 
 addReview = () => {
-  console.log('review added');
+  const review = {
+    id: '',
+    restaurant_id: self.restaurant.id,
+    name: document.getElementById('nameInput').value,
+    createdAt: new Date().getTime(),
+    updatedAt: new Date().getTime(),
+    rating: document.getElementById('ratingSelect').value,
+    comments: document.getElementById('commentInput').value,
+  };
+
+  console.log(review);
+  const ul = document.getElementById('reviews-list');
+  ul.insertBefore(createReviewHTML(review), ul.childNodes[0]);
+
+  document.getElementById('reviewForm').style.display = 'none';
 };
 
 /**
