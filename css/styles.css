@@ -188,7 +188,8 @@ nav h1 a {
 }
 #restaurants-list li a,
 .btn-add-review,
-.btn-submit-review {
+.btn-submit-review,
+.btn-cancel-review {
   background-color: orange;
 	color: #fff;
   display: inline-block;
@@ -200,12 +201,14 @@ nav h1 a {
   text-transform: uppercase;
 }#restaurants-list li a:focus,
 .btn-add-review:focus,
-.btn-submit-review:focus {
+.btn-submit-review:focus,
+.btn-cancel-review:focus {
   outline: 3px solid #3397DB;
 }
 #restaurants-list li a:hover,
 .btn-add-review:hover,
-.btn-submit-review:hover {
+.btn-submit-review:hover,
+.btn-cancel-review:hover {
 	filter: brightness(90%);
 }
 /* ====================== Restaurant Details ====================== */
@@ -388,11 +391,15 @@ nav h1 a {
 	width: 80%;
 	resize: none;
 }
-.btn-submit-review {
+.btn-submit-review,
+.btn-cancel-review {
 	background: green;
 	border: none;
 	margin: 10px 15px 20px 15px;
   padding: 10px 25px;
+}
+.btn-cancel-review {
+	background: red;
 }
 
 /* ====================== Media Queries ====================== */

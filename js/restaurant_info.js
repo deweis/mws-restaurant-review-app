@@ -117,9 +117,8 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
       container.appendChild(reviewsTitleBar);
 
       document.getElementById('btn-add-review').addEventListener('click', function () {
-        //document.getElementById('reviewForm').style.display = 'list-item';
-        console.log('add review form');
         addReviewForm();
+        document.getElementById('nameInput').autofocus = true;
       });
 
       if (!reviews) {
@@ -220,15 +219,28 @@ addReviewForm = () => {
   submitBtn.setAttribute('class', 'btn-submit-review');
   form.appendChild(submitBtn);
 
+  const cancelBtn = document.createElement('button');
+  cancelBtn.setAttribute('type', 'button');
+  cancelBtn.innerHTML = 'Cancel';
+  cancelBtn.setAttribute('id', 'btn-cancel-review');
+  cancelBtn.setAttribute('class', 'btn-cancel-review');
+  form.appendChild(cancelBtn);
+
   const ul = document.getElementById('reviews-list');
   ul.insertBefore(li, ul.childNodes[0]);
   document.getElementById('nameInput').required = true;
-  document.getElementById('nameInput').autofocus = true;
+  //document.getElementById('nameInput').autofocus = true;
   document.getElementById('commentInput').required = true;
 
   document.getElementById('reviewForm').addEventListener('submit', function (event) {
     event.preventDefault();   // Thank you https://stackoverflow.com/questions/21338476/addeventlistener-on-form-submit
     addReview();
+  });
+
+  document.getElementById('btn-cancel-review').addEventListener('click', function () {
+    const reviewForm = document.getElementById('reviewForm');
+    reviewForm.parentNode.removeChild(reviewForm);
+    document.getElementById('btn-add-review').style.display = 'inline-block';
   });
 
   document.getElementById('btn-add-review').style.display = 'none';
