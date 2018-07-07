@@ -117,7 +117,9 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
       container.appendChild(reviewsTitleBar);
 
       document.getElementById('btn-add-review').addEventListener('click', function () {
-        document.getElementById('reviewForm').style.display = 'list-item';
+        //document.getElementById('reviewForm').style.display = 'list-item';
+        console.log('add review form');
+        addReviewForm();
       });
 
       if (!reviews) {
@@ -127,21 +129,10 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
         return;
       } else {
         const ul = document.getElementById('reviews-list');
-
-        //ul.appendChild();
-        ul.insertBefore(createReviewForm(), ul.childNodes[0]);
-        document.getElementById('nameInput').required = true;
-        document.getElementById('nameInput').autofocus = true;
-        document.getElementById('commentInput').required = true;
         reviews.forEach(review => {
           ul.appendChild(createReviewHTML(review));
         });
         container.appendChild(ul);
-
-        document.getElementById('reviewForm').addEventListener('submit', function (event) {
-          event.preventDefault();   // Thank you https://stackoverflow.com/questions/21338476/addeventlistener-on-form-submit
-          addReview();
-        });
       }
     }
   });
@@ -154,7 +145,7 @@ addReview = () => {
     name: document.getElementById('nameInput').value,
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
-    rating: document.getElementById('ratingSelect').value,
+    rating: +document.getElementById('ratingSelect').value,
     comments: document.getElementById('commentInput').value,
   };
 
@@ -163,26 +154,24 @@ addReview = () => {
   ul.insertBefore(createReviewHTML(review), ul.childNodes[0]);
 
   document.getElementById('reviewForm').style.display = 'none';
+  document.getElementById('btn-add-review').style.display = 'inline-block';
 };
 
 /**
- * Create review form and add it (hidden by default)
+ * Create review form and add it as first list item
  */
-createReviewForm = () => {
+addReviewForm = () => {
   const li = document.createElement('li');
   li.setAttribute('class', 'reviewForm');
   li.setAttribute('id', 'reviewForm');
+
   const form = document.createElement('form');
   form.setAttribute = ('id', 'reviewForm');
   li.appendChild(form);
+
   const div = document.createElement('div');
   div.setAttribute('class', 'review-header reviewHeaderInput');
   form.appendChild(div);
-
-  // const name = document.createElement('p');
-  // name.setAttribute('class', 'reviewName');
-  // name.innerHTML = 'Your Name';
-  // div.appendChild(name);
 
   const nameInput = document.createElement('input');
   nameInput.setAttribute('type', 'text');
@@ -196,13 +185,6 @@ createReviewForm = () => {
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   date.innerHTML = (new Date()).toLocaleDateString('en-US', dateOptions);
   div.appendChild(date);
-
-  // const rating = document.createElement('p');
-  // rating.innerHTML = 5;
-  // rating.setAttribute('class', 'reviewRating');
-  // rating.style.backgroundColor = rating === 5 ? 'green' :
-  //                                rating > 2 ? 'orange' : 'red';
-  // form.appendChild(rating);
 
   const ratingInput = document.createElement('div');
   ratingInput.setAttribute('class', 'ratingInput');
@@ -225,11 +207,6 @@ createReviewForm = () => {
   ratingSelect.setAttribute('id', 'ratingSelect');
   ratingInput.appendChild(ratingSelect);
 
-  // const comments = document.createElement('p');
-  // comments.innerHTML = 'Your comment...';
-  // comments.setAttribute('class', 'reviewComment');
-  // form.appendChild(comments);
-
   const commentInput = document.createElement('textarea');
   commentInput.setAttribute('placeholder', 'Comment your rating..');
   commentInput.setAttribute('class', 'commentInput');
@@ -243,7 +220,18 @@ createReviewForm = () => {
   submitBtn.setAttribute('class', 'btn-submit-review');
   form.appendChild(submitBtn);
 
-  return li;
+  const ul = document.getElementById('reviews-list');
+  ul.insertBefore(li, ul.childNodes[0]);
+  document.getElementById('nameInput').required = true;
+  document.getElementById('nameInput').autofocus = true;
+  document.getElementById('commentInput').required = true;
+
+  document.getElementById('reviewForm').addEventListener('submit', function (event) {
+    event.preventDefault();   // Thank you https://stackoverflow.com/questions/21338476/addeventlistener-on-form-submit
+    addReview();
+  });
+
+  document.getElementById('btn-add-review').style.display = 'none';
 };
 
 /**

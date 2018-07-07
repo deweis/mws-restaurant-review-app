@@ -355,9 +355,6 @@ nav h1 a {
 	margin: 0;
 	padding: 15px 15px 25px 15px;
 }
-.reviewForm {
-	display: none;
-}
 .reviewHeaderInput {
 	padding: 22px 15px;
 }
@@ -392,6 +389,7 @@ nav h1 a {
 	resize: none;
 }
 .btn-submit-review {
+	background: green;
 	border: none;
 	margin: 10px 15px 20px 15px;
   padding: 10px 25px;
