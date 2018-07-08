@@ -253,6 +253,39 @@ class DBHelper {
   }
 
   /**
+   * Post reviews to DB
+   */
+  static postReview(review) {
+    const url = 'http://localhost:1337/reviews/';
+    const data = {
+      restaurant_id: review.restaurant_id,
+      name: review.name,
+      rating: review.rating,
+      comments: review.comments,
+      createdAt: review.createdAt,
+      updatedAt: review.updatedAt,
+    };
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
+  }
+
+  /**
+   * To delete an entry from the console
+
+  // change ID accordingly
+  fetch('http://localhost:1337/reviews/35', {
+    method: 'DELETE',
+  }).then(response => console.log('Success:', response));
+
+  */
+
+  /**
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {

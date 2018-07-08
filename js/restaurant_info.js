@@ -154,6 +154,8 @@ addReview = () => {
 
   document.getElementById('reviewForm').style.display = 'none';
   document.getElementById('btn-add-review').style.display = 'inline-block';
+
+  DBHelper.postReview(review);
 };
 
 /**
