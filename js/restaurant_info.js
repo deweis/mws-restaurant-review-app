@@ -156,6 +156,7 @@ addReview = () => {
   document.getElementById('btn-add-review').style.display = 'inline-block';
 
   DBHelper.postReview(review);
+
 };
 
 /**

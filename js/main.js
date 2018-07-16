@@ -17,6 +17,14 @@ if (navigator.serviceWorker) {
     });
 }
 
+window.addEventListener('offline', function () {
+  console.log('offline');
+});
+
+window.addEventListener('online', function () {
+  console.log('online');
+});
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */

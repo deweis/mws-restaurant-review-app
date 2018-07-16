@@ -43,6 +43,10 @@ class DBHelper {
       storeReviews.createIndex('restaurant_id',
                                'restaurant_id',
                                { unique: false });
+      var storeReviewsTmp = upgradeDb.createObjectStore('reviews-tmp', {
+        keyPath: 'id',
+        autoIncrement: true,
+      });
     });
   }
 
@@ -266,13 +270,40 @@ class DBHelper {
       updatedAt: review.updatedAt,
     };
 
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' },
-    }).then(res => res.json())
-    .catch(error => console.error('Error:', error))
-    .then(response => console.log('Success:', response));
+    // if (navigator.serviceWorker) {
+    //   console.log('service worker available to sync');
+    //   navigator.serviceWorker.ready.then(function (swRegistration) {
+    //     return swRegistration.sync.register('myFirstSync');
+    //   });
+    // }
+
+    // Add review to indexedDB - temp db
+    DBHelper.openDatabase().then(function (db) {
+      if (!db) {
+        return;
+      } else {
+        let storeReviewsTmp = db.transaction('reviews-tmp', 'readwrite')
+                                .objectStore('reviews-tmp');
+        storeReviewsTmp.put(review);
+        console.log('review into tmp db');
+        console.log(review);
+      }
+    }).then(function () {
+      if (navigator.serviceWorker) {
+        console.log('service worker available to sync');
+        navigator.serviceWorker.ready.then(function (swRegistration) {
+          return swRegistration.sync.register('myFirstSync');
+        });
+      }
+    });
+
+    // fetch(url, {
+    //     method: 'POST',
+    //     body: JSON.stringify(data),
+    //     headers: { 'Content-Type': 'application/json' },
+    //   }).then(res => res.json())
+    //   .catch(error => console.error('Error:', error))
+    //   .then(response => console.log('Success:', response));
   }
 
   /**
