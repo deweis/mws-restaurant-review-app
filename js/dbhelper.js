@@ -260,50 +260,19 @@ class DBHelper {
    * Post reviews to DB
    */
   static postReview(review) {
-    const url = 'http://localhost:1337/reviews/';
-    const data = {
-      restaurant_id: review.restaurant_id,
-      name: review.name,
-      rating: review.rating,
-      comments: review.comments,
-      createdAt: review.createdAt,
-      updatedAt: review.updatedAt,
-    };
-
-    // if (navigator.serviceWorker) {
-    //   console.log('service worker available to sync');
-    //   navigator.serviceWorker.ready.then(function (swRegistration) {
-    //     return swRegistration.sync.register('myFirstSync');
-    //   });
-    // }
-
-    // Add review to indexedDB - temp db
-    DBHelper.openDatabase().then(function (db) {
+    return DBHelper.openDatabase().then(function (db) {
       if (!db) {
         return;
       } else {
-        let storeReviewsTmp = db.transaction('reviews-tmp', 'readwrite')
-                                .objectStore('reviews-tmp');
-        storeReviewsTmp.put(review);
-        console.log('review into tmp db');
+        let transaction = db.transaction('reviews', 'readwrite');
+        let storeReviews = transaction.objectStore('reviews');
+
+        console.log('put review to db');
         console.log(review);
-      }
-    }).then(function () {
-      if (navigator.serviceWorker) {
-        console.log('service worker available to sync');
-        navigator.serviceWorker.ready.then(function (swRegistration) {
-          return swRegistration.sync.register('myFirstSync');
-        });
+        storeReviews.put(review);
+        return transaction.complete;
       }
     });
-
-    // fetch(url, {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //     headers: { 'Content-Type': 'application/json' },
-    //   }).then(res => res.json())
-    //   .catch(error => console.error('Error:', error))
-    //   .then(response => console.log('Success:', response));
   }
 
   /**

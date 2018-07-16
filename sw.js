@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 importScripts('idb.js');
+importScripts('js/dbhelper.js');
 
 const cacheName = 'restaurant-static';
 
@@ -43,61 +44,56 @@ self.addEventListener('fetch', event => {
 self.addEventListener('sync', function (event) {
   if (event.tag == 'myFirstSync') {
     console.log('sw: sync received');
-    event.waitUntil(
-      idb.open('restaurant-db', 1, function (upgradeDb) {
-        var storeReviewsTmp = upgradeDb.createObjectStore('reviews-tmp', {
-          keyPath: 'id',
-          autoIncrement: true,
+    event.waitUntil(syncReview());
+  }
+});
+
+const syncReview = () => {
+  idb.open('restaurant-db', 1, function (upgradeDb) {
+    var storeReviews = upgradeDb.createObjectStore('reviews', {
+      keyPath: 'id',
+      autoIncrement: true,
+    });
+  }).then(function (db) {
+    if (!db) {
+      return;
+    } else {
+      let storeReviews = db.transaction('reviews', 'readonly')
+                           .objectStore('reviews');
+      return storeReviews.getAll();
+    }
+  }).then(function (reviews) {
+
+    Promise.all(reviews.map(function (review) {
+      return fetch('http://localhost:1337/reviews/', {
+        body: JSON.stringify(review),
+        method: 'POST',
+      })
+      .then((response) => response.json()).then((res) => {
+        console.log('review fetched');
+        return idb.open('restaurant-db', 1, function (upgradeDb) {
+          var storeReviews = upgradeDb.createObjectStore('reviews', {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+        }).then(function (db) {
+          if (!db) {
+            return;
+          } else {
+            let storeReviews = db.transaction('reviews', 'readwrite')
+                                 .objectStore('reviews');
+            console.log('delete review: ' + review.id);
+            return storeReviews.delete(review.id);
+          }
+        }).catch(function (err) {
+          console.log('Delete review failed: ' + err);
         });
-      }).then(function (db) {
-        if (!db) {
-          return;
-        } else {
-          let storeReviewsTmp = db.transaction('reviews-tmp', 'readonly')
-                               .objectStore('reviews-tmp');
-          return storeReviewsTmp.getAll();
-          console.log('got them');
-        }
-      }).then(function (reviews) {
 
-        reviews.forEach(x => console.log(x));
+      }).catch((resp) => {
+        console.log('review could not be fetched');
+      });
 
-        return Promise.all(reviews.map(function (review) {
+    }));
 
-                const url = 'http://localhost:1337/reviews/';
-                const data = {
-                  restaurant_id: review.restaurant_id,
-                  name: review.name,
-                  rating: review.rating,
-                  comments: review.comments,
-                  createdAt: review.createdAt,
-                  updatedAt: review.updatedAt,
-                };
-                console.log('fetch the message');
-
-                return fetch(url, {
-                  method: 'POST',
-                  body: JSON.stringify(data),
-                  headers: { 'Content-Type': 'application/json' },
-                }).then(function (response) {
-                  return response.json();
-                }).catch(function (error) {
-                  console.log(error);
-                })/*.then(function (data) {
-                  console.log('delete the message');
-                  if (data.result === 'success') {
-                    storeReviewsTmp = db.transaction('reviews-tmp', 'readwrite')
-                                        .objectStore('reviews-tmp');
-                    return storeReviewsTmp.delete(review.comments);
-                  }
-                })*/;
-              })
-           );
-
-      }).catch(function (err) {
-        console.error(err);
-      }) // idbopen
-
-    ); // waituntil
-  } // if sync
-}); //eventlistener
+  }).catch(function (err) { console.error(err); });
+};

@@ -137,9 +137,15 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
   });
 };
 
+window.addEventListener('online', function (e) {
+  navigator.serviceWorker.ready.then(function (swRegistration) {
+    swRegistration.sync.register('myFirstSync');
+  });
+}, false);
+
 addReview = () => {
   const review = {
-    id: '',
+    //id: '',
     restaurant_id: self.restaurant.id,
     name: document.getElementById('nameInput').value,
     createdAt: new Date().getTime(),
@@ -155,8 +161,17 @@ addReview = () => {
   document.getElementById('reviewForm').style.display = 'none';
   document.getElementById('btn-add-review').style.display = 'inline-block';
 
-  DBHelper.postReview(review);
+  if (!navigator.onLine) {
+    console.log('Currently offline');
+  }
 
+  DBHelper.postReview(review).then(function () {
+    navigator.serviceWorker.ready.then(function (swRegistration) {
+      swRegistration.sync.register('myFirstSync');
+    });
+  }).catch(function (err) {
+    console.error(err);
+  });
 };
 
 /**
