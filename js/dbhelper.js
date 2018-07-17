@@ -274,16 +274,6 @@ class DBHelper {
     });
   }
 
-  /**
-   * To delete an entry from the console
-
-  // change ID accordingly
-  fetch('http://localhost:1337/reviews/35', {
-    method: 'DELETE',
-  }).then(response => console.log('Success:', response));
-
-  */
-
   static toggleFavorite(restaurantId, toggleValue) {
     return DBHelper.openDatabase().then(function (db) {
       if (!db) {

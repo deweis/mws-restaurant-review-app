@@ -43,7 +43,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('sync', function (event) {
   if (event.tag == 'myFirstSync') {
-    console.log('sw: sync received');
+    // console.log('sw: sync received');
     event.waitUntil(syncReview());
   }
 });
@@ -89,7 +89,8 @@ const syncReview = () => {
           } else {
             let storeReviews = db.transaction('reviews-tmp', 'readwrite')
                                  .objectStore('reviews-tmp');
-            console.log('delete review: ' + review.id);
+
+            // console.log('delete review: ' + review.id);
             return storeReviews.delete(review.id);
           }
         }).catch(function (err) {

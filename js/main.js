@@ -231,10 +231,8 @@ toggleFav = (restId, restName) => {
   element.classList.toggle('far');
   element.classList.toggle('fas');
   if (setToggle) {
-    console.log('adjust aria to mark');
     element.setAttribute('aria-label', `Mark ${restName} as favorite`);
   } else {
-    console.log('adjust aria to unmark');
     element.setAttribute('aria-label', `Unmark ${restName} as favorite`);
   }
 
