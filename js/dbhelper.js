@@ -265,8 +265,8 @@ class DBHelper {
       if (!db) {
         return;
       } else {
-        let transaction = db.transaction('reviews', 'readwrite');
-        let storeReviews = transaction.objectStore('reviews');
+        let transaction = db.transaction('reviews-tmp', 'readwrite');
+        let storeReviews = transaction.objectStore('reviews-tmp');
 
         storeReviews.put(review);
         return transaction.complete;

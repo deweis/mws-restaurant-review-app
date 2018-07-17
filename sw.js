@@ -50,7 +50,7 @@ self.addEventListener('sync', function (event) {
 
 const syncReview = () => {
   idb.open('restaurant-db', 1, function (upgradeDb) {
-    var storeReviews = upgradeDb.createObjectStore('reviews', {
+    var storeReviews = upgradeDb.createObjectStore('reviews-tmp', {
       keyPath: 'id',
       autoIncrement: true,
     });
@@ -58,21 +58,28 @@ const syncReview = () => {
     if (!db) {
       return;
     } else {
-      let storeReviews = db.transaction('reviews', 'readonly')
-                           .objectStore('reviews');
+      let storeReviews = db.transaction('reviews-tmp', 'readonly')
+                           .objectStore('reviews-tmp');
       return storeReviews.getAll();
     }
   }).then(function (reviews) {
 
     Promise.all(reviews.map(function (review) {
+      const data = {
+        restaurant_id: review.restaurant_id,
+        name: review.name,
+        rating: review.rating,
+        comments: review.comments,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+      };
       return fetch('http://localhost:1337/reviews/', {
-        body: JSON.stringify(review),
+        body: JSON.stringify(data),
         method: 'POST',
       })
-      .then((response) => response.json()).then((res) => {
-        console.log('review fetched');
+      .then((response) => response.json()).then((data) => {
         return idb.open('restaurant-db', 1, function (upgradeDb) {
-          var storeReviews = upgradeDb.createObjectStore('reviews', {
+          var storeReviews = upgradeDb.createObjectStore('reviews-tmp', {
             keyPath: 'id',
             autoIncrement: true,
           });
@@ -80,8 +87,8 @@ const syncReview = () => {
           if (!db) {
             return;
           } else {
-            let storeReviews = db.transaction('reviews', 'readwrite')
-                                 .objectStore('reviews');
+            let storeReviews = db.transaction('reviews-tmp', 'readwrite')
+                                 .objectStore('reviews-tmp');
             console.log('delete review: ' + review.id);
             return storeReviews.delete(review.id);
           }
