@@ -347,9 +347,14 @@ getParameterByName = (name, url) => {
 };
 
 /**
- * Set eventlistener for favorite toggle
+ * Set eventlisteners for favorite toggle
  */
 const fav = document.getElementById('isFavorite');
 fav.addEventListener('click', () => {
   toggleFavorite(self.restaurant.id);
+});
+fav.addEventListener('keydown', (e) => {
+  if (e.keyCode === 13) { // = enter key
+    toggleFavorite(self.restaurant.id);
+  }
 });

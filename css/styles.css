@@ -223,8 +223,8 @@ nav h1 a {
 	cursor: pointer;
 }
 #restaurant-container .far {
-	margin: 0;
-	padding: 30px 10px 30px 0;
+	margin: 20px 0px 20px 0;
+	padding: 10px;
 }
 .fas {
 	color: red;
@@ -232,8 +232,8 @@ nav h1 a {
 	cursor: pointer;
 }
 #restaurant-container .fas {
-	margin: 0;
-	padding: 30px 10px 30px 0;
+	margin: 20px 0px 20px 0;
+	padding: 10px;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -280,7 +280,7 @@ nav h1 a {
   text-transform: uppercase;
 }
 #restaurant-name {
-	width: 80%;
+	width: 75%;
 }
 #restaurant-img {
 	height: 100%;

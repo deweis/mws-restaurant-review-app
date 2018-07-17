@@ -202,6 +202,8 @@ createRestaurantHTML = (restaurant) => {
   const isFavorite = restaurant.is_favorite == 'true' ? 'fas' : 'far'; // API PUT converts true into 'true'...
   favorite.setAttribute('id', `rest${restaurant.id}`);
   favorite.setAttribute('class', `${isFavorite} fa-heart fa-3x`);
+  favorite.setAttribute('tabindex', '0');
+  favorite.setAttribute('role', 'button');
   if (restaurant.is_favorite == 'true') {
     favorite.setAttribute('aria-label', `Unmark ${restaurant.name} as favorite`);
   } else {
@@ -211,6 +213,12 @@ createRestaurantHTML = (restaurant) => {
   favorite.addEventListener('click', () => {
     const restId = favorite.getAttribute('id');
     toggleFav(restId, restaurant.name);
+  });
+  favorite.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13) { // = enter key
+      const restId = favorite.getAttribute('id');
+      toggleFav(restId, restaurant.name);
+    }
   });
   wrapper.append(favorite);
 
