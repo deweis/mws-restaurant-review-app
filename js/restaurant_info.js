@@ -49,11 +49,31 @@ fetchRestaurantFromURL = (callback) => {
 };
 
 /**
+ * Set the favorite restaurant layout
+ */
+toggleFavorite = (restId) => {
+  const element = document.getElementById('isFavorite');
+  const setToggle = element.classList.contains('far');
+  element.classList.toggle('far');
+  element.classList.toggle('fas');
+  DBHelper.toggleFavorite(restId, setToggle);
+};
+
+/**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  const favorite = document.getElementById('isFavorite');
+  const isFavorite = restaurant.is_favorite == 'true' ? 'fas' : 'far'; // API PUT converts true into 'true'...
+  favorite.classList.remove('far');
+  favorite.classList.add(`${isFavorite}`);
+  if (restaurant.is_favorite == 'true') {
+    favorite.setAttribute('aria-label', `Unmark ${restaurant.name} as favorite`);
+  } else {
+    favorite.setAttribute('aria-label', `Mark ${restaurant.name} as favorite`);
+  }
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
@@ -154,7 +174,6 @@ addReview = () => {
     comments: document.getElementById('commentInput').value,
   };
 
-  console.log(review);
   const ul = document.getElementById('reviews-list');
   ul.insertBefore(createReviewHTML(review), ul.childNodes[0]);
 
@@ -162,7 +181,7 @@ addReview = () => {
   document.getElementById('btn-add-review').style.display = 'inline-block';
 
   if (!navigator.onLine) {
-    console.log('Currently offline');
+    alert('You are currently offline. Your review will be posted once you are online again. Thank you for reviewing!');
   }
 
   DBHelper.postReview(review).then(function () {
@@ -247,6 +266,7 @@ addReviewForm = () => {
   const ul = document.getElementById('reviews-list');
   ul.insertBefore(li, ul.childNodes[0]);
   document.getElementById('nameInput').required = true;
+
   //document.getElementById('nameInput').autofocus = true;
   document.getElementById('commentInput').required = true;
 
@@ -325,3 +345,11 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+/**
+ * Set eventlistener for favorite toggle
+ */
+const fav = document.getElementById('isFavorite');
+fav.addEventListener('click', () => {
+  toggleFavorite(self.restaurant.id);
+});

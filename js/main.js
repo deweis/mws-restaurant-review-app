@@ -17,14 +17,6 @@ if (navigator.serviceWorker) {
     });
 }
 
-window.addEventListener('offline', function () {
-  console.log('offline');
-});
-
-window.addEventListener('online', function () {
-  console.log('online');
-});
-
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -195,14 +187,50 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  const wrapper = document.createElement('div');
+  wrapper.setAttribute('class', 'wrapper');
+  li.append(wrapper);
+
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   /*more.aria-label = restaurant.name;*/
   more.setAttribute('aria-label', 'View details of ' + restaurant.name);
-  li.append(more);
+  wrapper.append(more);
+
+  const favorite = document.createElement('i');
+  const isFavorite = restaurant.is_favorite == 'true' ? 'fas' : 'far'; // API PUT converts true into 'true'...
+  favorite.setAttribute('id', `rest${restaurant.id}`);
+  favorite.setAttribute('class', `${isFavorite} fa-heart fa-3x`);
+  if (restaurant.is_favorite == 'true') {
+    favorite.setAttribute('aria-label', `Unmark ${restaurant.name} as favorite`);
+  } else {
+    favorite.setAttribute('aria-label', `Mark ${restaurant.name} as favorite`);
+  }
+
+  favorite.addEventListener('click', () => {
+    const restId = favorite.getAttribute('id');
+    toggleFav(restId, restaurant.name);
+  });
+  wrapper.append(favorite);
 
   return li;
+};
+
+toggleFav = (restId, restName) => {
+  const element = document.getElementById(restId);
+  const setToggle = element.classList.contains('far');
+  element.classList.toggle('far');
+  element.classList.toggle('fas');
+  if (setToggle) {
+    console.log('adjust aria to mark');
+    element.setAttribute('aria-label', `Mark ${restName} as favorite`);
+  } else {
+    console.log('adjust aria to unmark');
+    element.setAttribute('aria-label', `Unmark ${restName} as favorite`);
+  }
+
+  DBHelper.toggleFavorite(restId[4], setToggle);
 };
 
 /**
