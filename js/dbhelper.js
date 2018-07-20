@@ -85,11 +85,14 @@ class DBHelper {
             if (!db) {
               return;
             } else {
-              let storeRestaurants = db.transaction('restaurants', 'readwrite')
-                            .objectStore('restaurants');
+              let tx = db.transaction('restaurants', 'readwrite');
+              let storeRestaurants = tx.objectStore('restaurants');
+
               restaurants.forEach(function (restaurant) {
                 storeRestaurants.put(restaurant);
               });
+
+              return tx.complete;
             }
           });
 
@@ -244,11 +247,14 @@ class DBHelper {
                 if (!db) {
                   return;
                 } else {
-                  let storeReviews = db.transaction('reviews', 'readwrite')
-                                       .objectStore('reviews');
+                  let tx = db.transaction('reviews', 'readwrite');
+                  let storeReviews = tx.objectStore('reviews');
+
                   reviews.forEach(function (review) {
                     storeReviews.put(review);
                   });
+
+                  return tx.complete;
                 }
               });
 
@@ -265,11 +271,11 @@ class DBHelper {
       if (!db) {
         return;
       } else {
-        let transaction = db.transaction('reviews-tmp', 'readwrite');
-        let storeReviews = transaction.objectStore('reviews-tmp');
+        let tx = db.transaction('reviews-tmp', 'readwrite');
+        let storeReviews = tx.objectStore('reviews-tmp');
 
         storeReviews.put(review);
-        return transaction.complete;
+        return tx.complete;
       }
     });
   }

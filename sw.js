@@ -87,11 +87,12 @@ const syncReview = () => {
           if (!db) {
             return;
           } else {
-            let storeReviews = db.transaction('reviews-tmp', 'readwrite')
-                                 .objectStore('reviews-tmp');
+            let tx = db.transaction('reviews-tmp', 'readwrite');
+            let storeReviews = tx.objectStore('reviews-tmp');
 
             // console.log('delete review: ' + review.id);
-            return storeReviews.delete(review.id);
+            storeReviews.delete(review.id);
+            return tx.complete;
           }
         }).catch(function (err) {
           console.log('Delete review failed: ' + err);
