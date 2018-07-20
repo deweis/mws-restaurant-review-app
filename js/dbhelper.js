@@ -304,14 +304,21 @@ class DBHelper {
 
     }).then(function () {
 
+      console.log('fetch favorite to server');
       const url = `http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${toggleValue}`;
 
       fetch(url, {
           method: 'PUT',
-        }).then((response) => response.json()
-        ).catch((error) => {
+        }).then((response) => {
+          console.log(response);
+          return response.json();
+        }).then((data) => {
+          console.log(data);
+        }).catch((error) => {
           console.log('Error fetching is_favorite: ' + error);
         });
+    }).then(function () {
+      console.log('to update page');
     });
   }
 
