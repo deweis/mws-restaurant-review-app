@@ -236,8 +236,12 @@ toggleFav = (restId, restName) => {
     element.setAttribute('aria-label', `Unmark ${restName} as favorite`);
   }
 
-  DBHelper.toggleFavorite(restId.slice(4), setToggle);
-  //updateRestaurants();
+  DBHelper.toggleFavorite(restId.slice(4), setToggle).then(() => {
+    setTimeout(function () {
+      updateRestaurants();
+    }, 200);
+  });
+
 };
 
 /**

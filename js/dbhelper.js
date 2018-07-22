@@ -310,22 +310,18 @@ class DBHelper {
 
     }).then(function () {
 
-      console.log('fetch favorite to server');
-      const url = `http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${toggleValue}`;
+        const url = `http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${toggleValue}`;
 
-      fetch(url, {
+        fetch(url, {
           method: 'PUT',
-        }).then((response) => {
-          console.log(response);
-          return response.json();
-        }).then((data) => {
-          console.log(data);
-        }).catch((error) => {
+        }).then((response) => response.json()
+        ).catch((error) => {
           console.log('Error fetching is_favorite: ' + error);
         });
-    }).then(function () {
-      console.log('to update page');
-    });
+
+      }).then(function () {
+        return Promise.resolve();
+      });
   }
 
   /**
