@@ -205,6 +205,7 @@ addReview = () => {
   DBHelper.postReview(review).then(function () {
     navigator.serviceWorker.ready.then(function (swRegistration) {
       swRegistration.sync.register('myFirstSync');
+      location.reload();
     });
   }).then(function () {
     fillReviewsHTML();

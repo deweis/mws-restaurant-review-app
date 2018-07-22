@@ -64,6 +64,8 @@ const syncReview = () => {
     }
   }).then(function (reviews) {
 
+    let objRev = {};
+
     Promise.all(reviews.map(function (review) {
       const data = {
         restaurant_id: review.restaurant_id,
@@ -77,7 +79,9 @@ const syncReview = () => {
         body: JSON.stringify(data),
         method: 'POST',
       })
-      .then((response) => response.json()).then((data) => {
+      .then((response) => response.json()).then((dataJSON) => {
+        objRev = dataJSON;
+
         return idb.open('restaurant-db', 1, function (upgradeDb) {
           var storeReviews = upgradeDb.createObjectStore('reviews-tmp', {
             keyPath: 'id',
@@ -98,6 +102,26 @@ const syncReview = () => {
           console.log('Delete review failed: ' + err);
         });
 
+      }).then(() => {
+        return idb.open('restaurant-db', 1, function (upgradeDb) {
+          var storeReviews = upgradeDb.createObjectStore('reviews', {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+        }).then(function (db) {
+          if (!db) {
+            return;
+          } else {
+            let tx = db.transaction('reviews', 'readwrite');
+            let storeReviews = tx.objectStore('reviews');
+
+            storeReviews.put(objRev);
+
+            return tx.complete;
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
       }).catch((resp) => {
         console.log('review could not be fetched');
       });
