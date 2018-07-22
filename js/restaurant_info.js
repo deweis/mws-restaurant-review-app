@@ -152,6 +152,24 @@ fillReviewsHTML = (restaurantId = self.restaurant.id) => {
           ul.appendChild(createReviewHTML(review));
         });
         container.appendChild(ul);
+        fillTmpReviewsHTML();
+      }
+    }
+  });
+};
+
+fillTmpReviewsHTML = (restaurantId = self.restaurant.id) => {
+  DBHelper.fetchTmpReviews(restaurantId, (error, reviews) => {
+
+    if (error) {
+      console.log(error);
+    } else {
+      const ul = document.getElementById('reviews-list');
+      const tmps = document.getElementsByClassName('tmp');
+      if (tmps.length === 0) { // mitigate double adds
+        reviews.forEach(review => {
+          ul.appendChild(createTmpReviewHTML(review));
+        });
       }
     }
   });
@@ -188,6 +206,10 @@ addReview = () => {
     navigator.serviceWorker.ready.then(function (swRegistration) {
       swRegistration.sync.register('myFirstSync');
     });
+  }).then(function () {
+    fillReviewsHTML();
+  }).then(function () {
+    fillTmpReviewsHTML();
   }).catch(function (err) {
     console.error(err);
   });
@@ -289,6 +311,42 @@ addReviewForm = () => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  const div = document.createElement('div');
+  div.setAttribute('class', 'review-header');
+  li.appendChild(div);
+
+  const name = document.createElement('p');
+  name.setAttribute('class', 'reviewName');
+  name.innerHTML = review.name;
+  div.appendChild(name);
+
+  const date = document.createElement('p');
+  date.setAttribute('class', 'reviewDate');
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  date.innerHTML = (new Date(review.createdAt)).toLocaleDateString('en-US', dateOptions);
+  div.appendChild(date);
+
+  const rating = document.createElement('p');
+  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.setAttribute('class', 'reviewRating');
+  rating.style.backgroundColor = review.rating === 5 ? 'green' :
+                                 review.rating > 2 ? 'orange' : 'red';
+  li.appendChild(rating);
+
+  const comments = document.createElement('p');
+  comments.innerHTML = review.comments;
+  comments.setAttribute('class', 'reviewComment');
+  li.appendChild(comments);
+
+  return li;
+};
+
+/**
+ * Create TMP review HTML and add it to the webpage.
+ */
+createTmpReviewHTML = (review) => {
+  const li = document.createElement('li');
+  li.setAttribute('class', 'tmp');
   const div = document.createElement('div');
   div.setAttribute('class', 'review-header');
   li.appendChild(div);

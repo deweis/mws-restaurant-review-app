@@ -48,6 +48,9 @@ class DBHelper {
         keyPath: 'id',
         autoIncrement: true,
       });
+      storeReviewsTmp.createIndex('restaurant_id',
+                               'restaurant_id',
+                               { unique: false });
     });
   }
 
@@ -263,6 +266,24 @@ class DBHelper {
            .catch(error => callback(`Request failed. Returned ${error}`, null));
   }
 
+  static fetchTmpReviews(id, callback) {
+
+    // get reviews from indexedDB
+    DBHelper.openDatabase().then(function (db) {
+      if (!db) {
+        return;
+      }  else {
+        let storeReviews = db.transaction('reviews-tmp', 'readonly')
+                             .objectStore('reviews-tmp');
+        let restIndex = storeReviews.index('restaurant_id');
+        return restIndex.getAll(parseInt(id));
+      }
+    }).then(function (reviews) {
+      if (reviews.length === 0) return;
+      callback(null, reviews);
+    });
+  }
+
   /**
    * Post reviews to DB
    */
@@ -277,6 +298,11 @@ class DBHelper {
         storeReviews.put(review);
         return tx.complete;
       }
+    }).then(function () {
+      return Promise.resolve();
+    }).catch(function (err) {
+      console.log(err);
+      return Promise.resolve();
     });
   }
 
